@@ -1,7 +1,8 @@
 import bpy
+from ..domain.mesh_metadata import MeshMetadata
 
 
-def collect_mesh_metadata(mesh: bpy.types.Object) -> dict:
+def collect_mesh_metadata(mesh: bpy.types.Object) -> MeshMetadata:
     dependencies_graph = bpy.context.evaluated_depsgraph_get()
     evaluated_object = mesh.evaluated_get(dependencies_graph)
     evaluated_mesh = evaluated_object.to_mesh()
@@ -17,19 +18,17 @@ def collect_mesh_metadata(mesh: bpy.types.Object) -> dict:
             if len(poly.vertices) > 4
         )
 
-        rotation_applied = mesh.rotation_euler == (0.0, 0.0, 0.0)
-        scale_applied = mesh.scale == (1.0, 1.0, 1.0)
         uv_map_count = len(evaluated_mesh.uv_layers)
         vertex_count = len(evaluated_mesh.vertices)
 
     finally:
         evaluated_object.to_mesh_clear()
 
-    return {
-        "Mesh.VertexCount": vertex_count,
-        "Mesh.TriangleCount": triangle_count,
-        "Mesh.NgonCount": ngon_count,
-        "UV.MapCount": uv_map_count,
-        "Transform.ScaleApplied": scale_applied,
-        "Transform.RotationApplied": rotation_applied
-    }
+    return MeshMetadata(
+        vertex_count=vertex_count,
+        triangle_count=triangle_count,
+        ngon_count=ngon_count,
+        uv_map_count=uv_map_count,
+        scale=tuple(mesh.scale),
+        rotation=tuple(mesh.rotation_euler)
+    )
