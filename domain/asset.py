@@ -11,7 +11,6 @@ class Asset:
     metadata: dict[str, object]
     size_in_bytes: int = 0
 
-
     def to_json(self) -> AssetJsonDict:
         return {
             "Type": AssetType.MESH,
