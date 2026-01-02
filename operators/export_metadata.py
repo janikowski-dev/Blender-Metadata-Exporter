@@ -7,7 +7,7 @@ from typing import Iterable
 from ..collectors.mesh_collector import collect_mesh_metadata
 from ..domain.asset_type import AssetType
 from ..domain.asset import Asset
-from ..constants import OP_EXPORT_METADATA, UI_EXPORT_METADATA
+from ..constants import OP_EXPORT_METADATA, UI_EXPORT_METADATA, EXPORT_SOURCE
 
 JsonObject = dict[str, object]
 
@@ -49,7 +49,9 @@ class BME_OT_ExportMetadata(bpy.types.Operator, ExportHelper):  # type: ignore[m
                 continue
 
             mesh = Asset(
+                type=AssetType.MESH,
                 name=selected_object.name,
+                source=EXPORT_SOURCE,
                 path=f"Blender/{selected_object.name}.fbx",
                 metadata=collect_mesh_metadata(selected_object).to_dict()
             )

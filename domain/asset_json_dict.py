@@ -5,6 +5,7 @@ from .metadata import Metadata
 
 class AssetJsonDict(TypedDict):
     Type: str
+    Source: str
     Name: str
     Path: str
     SizeInBytes: int
